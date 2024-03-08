@@ -128,6 +128,7 @@ def main():
             szoveg_kirajzolasa("Machine Bet: {}".format(
                 "Red" if gep_tet_szin == PIROS else ("Green" if gep_tet_szin == ZOLD else "Black")), betu, FEKETE,
                 kepernyo, 20, 160)
+            szoveg_kirajzolasa(f"Number:{porgetes_eredmeny}",betu,FEKETE,kepernyo,20,200)
 
         pygame.display.flip()
 
