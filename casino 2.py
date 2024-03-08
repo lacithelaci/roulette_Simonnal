@@ -22,7 +22,7 @@ pygame.display.set_caption("Rulett")
 betu = pygame.font.Font(None, 36)
 
 # Jatekos egyenlege
-egyenleg = 100
+egyenleg = 1000
 
 
 def szoveg_kirajzolasa(szoveg, betutipus, szin, felulet, x, y):
@@ -46,47 +46,52 @@ def main():
         for esemeny in pygame.event.get():
             if esemeny.type == pygame.QUIT:
                 fut = False
-            if esemeny.type == pygame.KEYDOWN:
-                if esemeny.key == pygame.K_q:
-                    fut = False
-            elif esemeny.type == pygame.MOUSEBUTTONDOWN:
-                # Bet gombok
-                if piros_teglalap.collidepoint(esemeny.pos):
-                    tet_szin = PIROS
-                elif zold_teglalap.collidepoint(esemeny.pos):
-                    tet_szin = ZOLD
-                elif fekete_teglalap.collidepoint(esemeny.pos):
-                    tet_szin = FEKETE
-                # Tet beallitasa
-                elif tiz_teglalap.collidepoint(esemeny.pos):
-                    tet_osszeg += 10
-                elif otven_teglalap.collidepoint(esemeny.pos):
-                    tet_osszeg += 50
-                elif szaz_teglalap.collidepoint(esemeny.pos):
-                    tet_osszeg += 100
-                elif torol_teglalap.collidepoint(esemeny.pos):
-                    tet_osszeg = 0
-                    tet_szin = None
-                elif porgetes_teglalap.collidepoint(esemeny.pos):
-                    if tet_osszeg > 0 and tet_szin:
-                        porgetes_eredmeny = random.randint(0, 36)
-                        if porgetes_eredmeny in PIROS_SZAMOK:
-                            gep_tet_szin = PIROS
-                        elif porgetes_eredmeny in FEKETE_SZAMOK:
-                            gep_tet_szin = FEKETE
-                        else:
-                            gep_tet_szin = ZOLD
-                        if tet_szin == gep_tet_szin:
-                            if gep_tet_szin == FEKETE or gep_tet_szin == PIROS:
-                                egyenleg += tet_osszeg
-                            else:
-                                egyenleg += tet_osszeg * 14
-                        else:
-                            # Egyebkent veszteseg
-                            egyenleg -= tet_osszeg
-                        # Tet alaphelyzetbe allitasa
+            if egyenleg > 0:
+                if esemeny.type == pygame.KEYDOWN:
+                    if esemeny.key == pygame.K_q:
+                        fut = False
+
+                elif esemeny.type == pygame.MOUSEBUTTONDOWN:
+                    # Bet gombok
+                    if piros_teglalap.collidepoint(esemeny.pos):
+                        tet_szin = PIROS
+                    elif zold_teglalap.collidepoint(esemeny.pos):
+                        tet_szin = ZOLD
+                    elif fekete_teglalap.collidepoint(esemeny.pos):
+                        tet_szin = FEKETE
+                    # Tet beallitasa
+                    elif tiz_teglalap.collidepoint(esemeny.pos):
+                        tet_osszeg += 10
+                    elif otven_teglalap.collidepoint(esemeny.pos):
+                        tet_osszeg += 50
+                    elif szaz_teglalap.collidepoint(esemeny.pos):
+                        tet_osszeg += 100
+                    elif torol_teglalap.collidepoint(esemeny.pos):
                         tet_osszeg = 0
                         tet_szin = None
+                    elif porgetes_teglalap.collidepoint(esemeny.pos):
+                        if tet_osszeg > 0 and tet_szin:
+                            porgetes_eredmeny = random.randint(0, 36)
+                            if porgetes_eredmeny in PIROS_SZAMOK:
+                                gep_tet_szin = PIROS
+                            elif porgetes_eredmeny in FEKETE_SZAMOK:
+                                gep_tet_szin = FEKETE
+                            else:
+                                gep_tet_szin = ZOLD
+                            if tet_szin == gep_tet_szin:
+                                if gep_tet_szin == FEKETE or gep_tet_szin == PIROS:
+                                    egyenleg += tet_osszeg
+                                else:
+                                    egyenleg += tet_osszeg * 14
+                            else:
+                                # Egyebkent veszteseg
+                                egyenleg -= tet_osszeg
+                            # Tet alaphelyzetbe allitasa
+                            tet_osszeg = 0
+                            tet_szin = None
+            else:
+
+                fut = False
 
         # Gombok kirajzolasa
         tiz_teglalap = pygame.draw.rect(kepernyo, FEKETE, (20, 450, 80, 50))
@@ -128,7 +133,7 @@ def main():
             szoveg_kirajzolasa("Machine Bet: {}".format(
                 "Red" if gep_tet_szin == PIROS else ("Green" if gep_tet_szin == ZOLD else "Black")), betu, FEKETE,
                 kepernyo, 20, 160)
-            szoveg_kirajzolasa(f"Number:{porgetes_eredmeny}",betu,FEKETE,kepernyo,20,200)
+            szoveg_kirajzolasa(f"Number:{porgetes_eredmeny}", betu, FEKETE, kepernyo, 20, 200)
 
         pygame.display.flip()
 
