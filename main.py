@@ -16,6 +16,10 @@ tabla = [["P", "F", "P", "P", "F", "P", "P", "F", "P", "P", "F", "P", "Z"],
          ["F", "P", "F", "F", "P", "F", "F", "P", "F", "F", "P", "F", "Z"],
          ["P", "F", "P", "F", "F", "P", "P", "F", "P", "F", "F", "P", "Z"]]
 
+elso_sor_szoveg = ["3", "6", "9", "12", "15", "18", "21", "24", "27", "30", "33", "36"]
+masodik_sor_szoveg = ["2", "5", "8", "11", "14", "17", "20", "23", "26", "29", "32", "35"]
+harmadik_sor_szoveg = ["1", "4", "7", "10", "13", "16", "19", "22", "25", "28", "31", "34"]
+
 # inicializálás
 pygame.init()
 screen = pygame.display.set_mode((900, 600))
@@ -29,6 +33,13 @@ angle = 0
 def teglalap_kirajzolasa(screen, szin, x, y, szelesseg, magassag):
     # téglalap rajzolása
     pygame.draw.rect(screen, szin, (x, y, szelesseg, magassag))  # (x, y, width, height)
+
+
+def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=36, szin=feher, betutipus=None):
+    if betutipus is None:
+        betutipus = pygame.font.Font(None, betumeret)
+    megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
+    screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
 
 running = True
@@ -65,6 +76,16 @@ while running:
         if uj_sorkezdes == 24:
             tabla_y_koordinata += 77
             teglalap_hossza = 78
+    # 1. sor számok
+    for i in range(0, len(elso_sor_szoveg)):
+        szoveget_kirajzol(screen, f"{elso_sor_szoveg[i]}", 160 + i * 50, 195, 50, feher)
+    # 2. sor számok
+    for i in range(0,len(masodik_sor_szoveg)):
+        szoveget_kirajzol(screen, f"{masodik_sor_szoveg[i]}", 155 + i * 50, 195+75, 50, feher)
+    # 3. sor számok
+    for i in range(0,len(harmadik_sor_szoveg)):
+        szoveget_kirajzol(screen, f"{harmadik_sor_szoveg[i]}", 155 + i * 50, 195+150, 50, feher)
+
 
     # fehér vonalak kirajzolása
     feher_vonal_y = 160
@@ -80,7 +101,6 @@ while running:
             pygame.draw.rect(screen, feher, (y, feher_vonal_y, 52, 82), 3)
             feher_vonal_uj_sor += 1
     # 4. sor
-
     pygame.draw.rect(screen, feher, (150, 395, 203, 60), 3)
     pygame.draw.rect(screen, feher, (150, 395, 603, 60), 3)
     pygame.draw.rect(screen, feher, (150, 395, 403, 60), 3)
@@ -110,9 +130,9 @@ while running:
     pygame.draw.rect(screen, feher, (590, 20, 225, 50), 3)
     # Kerek
 
-    logo = pygame.image.load("rlogo.png")
+    logo = pygame.image.load("kepek/rlogo.png")
     pygame.display.set_icon(logo)
-    kerek = pygame.image.load(("rkerek.png"))
+    kerek = pygame.image.load(("kepek/rkerek.png"))
     screen.blit(kerek, (375, 15))
 
     x = 440
@@ -134,23 +154,23 @@ while running:
     pygame.draw.rect(screen, sarga2, (255, 524, 87, 42))  # torles
 
     # zseton
-    sargabet = pygame.image.load("sarga.png").convert_alpha()
+    sargabet = pygame.image.load("kepek/sarga.png").convert_alpha()
     screen.blit(sargabet, (364, 524))
 
-    piros_bet = pygame.image.load("piros.png").convert_alpha()
+    piros_bet = pygame.image.load("kepek/piros.png").convert_alpha()
     screen.blit(piros_bet, (428, 524))
 
-    zold_bet = pygame.image.load("zold.png").convert_alpha()
+    zold_bet = pygame.image.load("kepek/zold.png").convert_alpha()
     screen.blit(zold_bet, (491, 524))
 
-    kek_bet = pygame.image.load("kek.png").convert_alpha()
+    kek_bet = pygame.image.load("kepek/kek.png").convert_alpha()
     screen.blit(kek_bet, (553, 524))
 
-    fekete_bet = pygame.image.load("fekete.png").convert_alpha()
+    fekete_bet = pygame.image.load("kepek/fekete.png").convert_alpha()
     screen.blit(fekete_bet, (615, 524))
 
     # eger
-    eger = pygame.image.load("mousepos.png").convert_alpha()
+    eger = pygame.image.load("kepek/mousepos.png").convert_alpha()
     egkep = screen.blit(eger, (-100, -10))
     pygame.mouse.set_visible(False)
     pos = pygame.mouse.get_pos()
