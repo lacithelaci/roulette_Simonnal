@@ -1,5 +1,6 @@
 import pygame
 import math
+
 # Színek
 
 hatter = (53, 113, 87)
@@ -8,6 +9,8 @@ piros = (156, 12, 2)
 fekete = (31, 29, 30)
 zold = (53, 173, 84)
 feher2 = (255, 255, 255)
+sarga = (249, 194, 97)
+sarga2 = (255, 252, 207)
 
 tabla = [["P", "F", "P", "P", "F", "P", "P", "F", "P", "P", "F", "P", "Z"],
          ["F", "P", "F", "F", "P", "F", "F", "P", "F", "F", "P", "F", "Z"],
@@ -19,11 +22,14 @@ screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Casino Rulette Game")
 angle = 0
+
+
 # game loop
 
 def teglalap_kirajzolasa(screen, szin, x, y, szelesseg, magassag):
     # téglalap rajzolása
     pygame.draw.rect(screen, szin, (x, y, szelesseg, magassag))  # (x, y, width, height)
+
 
 running = True
 while running:
@@ -31,7 +37,6 @@ while running:
         if event.type == pygame.QUIT:
             running = False
         print(event)
-
 
     screen.fill(hatter)
     # tabla 1-3 sorának kirajzolasához a változók
@@ -117,6 +122,41 @@ while running:
     golyocska = pygame.draw.circle(screen, feher2, (53 * math.cos(angle) + x, 53 * math.sin(angle) + y), 3)
 
     angle += 0.03
+
+    # kiegeszíto&indito
+    pygame.draw.rect(screen, sarga, (38, 520, 103, 50), 3)
+    pygame.draw.rect(screen, sarga2, (42, 524, 95, 42))  # ismetles
+    pygame.draw.rect(screen, sarga, (678, 520, 122, 50), 3)
+    pygame.draw.rect(screen, sarga2, (682, 524, 113, 42))  # start
+    pygame.draw.rect(screen, sarga, (149, 520, 96, 50), 3)
+    pygame.draw.rect(screen, sarga2, (154, 524, 86, 42))  # vissza
+    pygame.draw.rect(screen, sarga, (251, 520, 96, 50), 3)
+    pygame.draw.rect(screen, sarga2, (255, 524, 87, 42))  # torles
+
+    # zseton
+    sargabet = pygame.image.load("sarga.png").convert_alpha()
+    screen.blit(sargabet, (364, 524))
+
+    piros_bet = pygame.image.load("piros.png").convert_alpha()
+    screen.blit(piros_bet, (428, 524))
+
+    zold_bet = pygame.image.load("zold.png").convert_alpha()
+    screen.blit(zold_bet, (491, 524))
+
+    kek_bet = pygame.image.load("kek.png").convert_alpha()
+    screen.blit(kek_bet, (553, 524))
+
+    fekete_bet = pygame.image.load("fekete.png").convert_alpha()
+    screen.blit(fekete_bet, (615, 524))
+
+    # eger
+    eger = pygame.image.load("mousepos.png").convert_alpha()
+    egkep = screen.blit(eger, (-100, -10))
+    pygame.mouse.set_visible(False)
+    pos = pygame.mouse.get_pos()
+    egkep.center = pos
+
+    screen.blit(eger, egkep)
     pygame.display.update()
     clock.tick(60)
 
