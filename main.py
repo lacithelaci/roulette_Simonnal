@@ -27,7 +27,8 @@ clock = pygame.time.Clock()
 pygame.display.set_caption("Casino Rulette Game")
 angle = 0
 # Font objektum létrehozása
-betutipus = pygame.font.Font(None, 36)
+betutipus = pygame.font.Font(None, 30)
+
 
 # game loop
 
@@ -36,28 +37,34 @@ def teglalap_kirajzolasa(screen, szin, x, y, szelesseg, magassag):
     pygame.draw.rect(screen, szin, (x, y, szelesseg, magassag))  # (x, y, width, height)
 
 
-def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=36, szin=feher, betutipus=None):
+def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=30, szin=feher, betutipus=None, forgatas=False):
     if betutipus is None:
         betutipus = pygame.font.Font(None, betumeret)
     megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
-    megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
+    if forgatas:
+        megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
     screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
-def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=36, szin=feher, betutipus=None):
-    if betutipus is None:
-        betutipus = pygame.font.Font(None, betumeret)
-    megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
-    megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
-    screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
 running = True
 while running:
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
+
         print(event)
 
     screen.fill(hatter)
+
+    # Egyenleg
+    egyenleg = 100000
+    tet = 0
+    utolso_nyeremeny = ""
+    pygame.draw.rect(screen, feher, (40, 20, 260, 100), 3)
+    szoveget_kirajzol(screen, f"HUF: {egyenleg}", 45, 30, 10, feher, betutipus)
+    szoveget_kirajzol(screen, f"Tét: {tet}", 45, 60, 10, feher, betutipus)
+    szoveget_kirajzol(screen, f"Utolsó Nyeremény: {utolso_nyeremeny}", 45, 90, 10, feher, betutipus)
+
     # tabla 1-3 sorának kirajzolasához a változók
     uj_sorkezdes = 0
     tabla_x_koordinata = 150
@@ -87,13 +94,15 @@ while running:
 
     # 1. sor számok
     for i in range(0, sorhossz):
-        szoveget_kirajzol(screen, f"{elso_sor_szoveg[i]}", 165 + i * 50, 195, 50, feher, betutipus)
+        szoveget_kirajzol(screen, f"{elso_sor_szoveg[i]}", 165 + i * 50, 195, 50, feher, betutipus, forgatas=True)
     # 2. sor számok
     for i in range(0, sorhossz):
-        szoveget_kirajzol(screen, f"{masodik_sor_szoveg[i]}", 165 + i * 50, 195 + 75, 50, feher, betutipus)
+        szoveget_kirajzol(screen, f"{masodik_sor_szoveg[i]}", 165 + i * 50, 195 + 75, 50, feher, betutipus,
+                          forgatas=True)
     # 3. sor számok
     for i in range(0, sorhossz):
-        szoveget_kirajzol(screen, f"{harmadik_sor_szoveg[i]}", 165 + i * 50, 195 + 150, 50, feher, betutipus)
+        szoveget_kirajzol(screen, f"{harmadik_sor_szoveg[i]}", 165 + i * 50, 195 + 150, 50, feher, betutipus,
+                          forgatas=True)
 
     # fehér vonalak kirajzolása
     feher_vonal_y = 160
@@ -113,6 +122,10 @@ while running:
     pygame.draw.rect(screen, feher, (150, 395, 203, 60), 3)
     pygame.draw.rect(screen, feher, (150, 395, 603, 60), 3)
     pygame.draw.rect(screen, feher, (150, 395, 403, 60), 3)
+    # tucatok kirajzolása175 420
+    for i in range(0, 3):
+        szoveget_kirajzol(screen, f"{i + 1}. tucat", 200 * i + 200, 410, 10, feher, betutipus)
+
     # 5. sor
 
     pygame.draw.rect(screen, piros, (350, 454, 103, 56))
@@ -124,6 +137,11 @@ while running:
     pygame.draw.rect(screen, feher, (453, 450, 100, 60), 3)
     pygame.draw.rect(screen, feher, (653, 450, 100, 60), 3)
 
+    szoveget_kirajzol(screen, f"páratlan", 560, 470, 10, feher, betutipus)
+    szoveget_kirajzol(screen, f"magas", 660, 470, 10, feher, betutipus)
+    szoveget_kirajzol(screen, f"páros", 270, 470, 10, feher, betutipus)
+    szoveget_kirajzol(screen, f"alacsony", 155, 470, 10, feher, betutipus)
+
     # oldalsó bizbasz
     pygame.draw.line(screen, feher, (115, 161), (161, 161), 2)
     pygame.draw.line(screen, feher, (115, 394), (260, 396), 2)
@@ -131,9 +149,7 @@ while running:
     pygame.draw.line(screen, feher, (115, 394), (105, 367), 2)
     pygame.draw.line(screen, feher, (105, 190), (105, 365), 2)
     pygame.draw.ellipse(screen, zold, (114, 245, 30, 72))  # 0
-    # Egyenleg
 
-    pygame.draw.rect(screen, feher, (40, 20, 260, 100), 3)
     # elozmeny
 
     pygame.draw.rect(screen, feher, (590, 20, 225, 50), 3)
@@ -160,7 +176,8 @@ while running:
     pygame.draw.rect(screen, sarga, (149, 520, 96, 50), 3)
     pygame.draw.rect(screen, sarga2, (154, 524, 86, 42))  # vissza
     pygame.draw.rect(screen, sarga, (251, 520, 96, 50), 3)
-    pygame.draw.rect(screen, sarga2, (255, 524, 87, 42))  # torles
+    torles = pygame.draw.rect(screen, sarga2, (255, 524, 87, 42))  # torles
+    szoveget_kirajzol(screen, f"törlés", 710, 537, 10, feher, betutipus)
 
     # zseton
     sargabet = pygame.image.load("kepek/sarga.png").convert_alpha()
