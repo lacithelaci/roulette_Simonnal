@@ -19,14 +19,15 @@ tabla = [["P", "F", "P", "P", "F", "P", "P", "F", "P", "P", "F", "P", "Z"],
 elso_sor_szoveg = ["3", "6", "9", "12", "15", "18", "21", "24", "27", "30", "33", "36"]
 masodik_sor_szoveg = ["2", "5", "8", "11", "14", "17", "20", "23", "26", "29", "32", "35"]
 harmadik_sor_szoveg = ["1", "4", "7", "10", "13", "16", "19", "22", "25", "28", "31", "34"]
-
+sorhossz = len(elso_sor_szoveg)
 # inicializálás
 pygame.init()
 screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Casino Rulette Game")
 angle = 0
-
+# Font objektum létrehozása
+betutipus = pygame.font.Font(None, 36)
 
 # game loop
 
@@ -39,8 +40,15 @@ def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=36, szin=feh
     if betutipus is None:
         betutipus = pygame.font.Font(None, betumeret)
     megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
+    megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
     screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
+def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=36, szin=feher, betutipus=None):
+    if betutipus is None:
+        betutipus = pygame.font.Font(None, betumeret)
+    megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
+    megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
+    screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
 running = True
 while running:
@@ -76,16 +84,16 @@ while running:
         if uj_sorkezdes == 24:
             tabla_y_koordinata += 77
             teglalap_hossza = 78
-    # 1. sor számok
-    for i in range(0, len(elso_sor_szoveg)):
-        szoveget_kirajzol(screen, f"{elso_sor_szoveg[i]}", 160 + i * 50, 195, 50, feher)
-    # 2. sor számok
-    for i in range(0,len(masodik_sor_szoveg)):
-        szoveget_kirajzol(screen, f"{masodik_sor_szoveg[i]}", 155 + i * 50, 195+75, 50, feher)
-    # 3. sor számok
-    for i in range(0,len(harmadik_sor_szoveg)):
-        szoveget_kirajzol(screen, f"{harmadik_sor_szoveg[i]}", 155 + i * 50, 195+150, 50, feher)
 
+    # 1. sor számok
+    for i in range(0, sorhossz):
+        szoveget_kirajzol(screen, f"{elso_sor_szoveg[i]}", 165 + i * 50, 195, 50, feher, betutipus)
+    # 2. sor számok
+    for i in range(0, sorhossz):
+        szoveget_kirajzol(screen, f"{masodik_sor_szoveg[i]}", 165 + i * 50, 195 + 75, 50, feher, betutipus)
+    # 3. sor számok
+    for i in range(0, sorhossz):
+        szoveget_kirajzol(screen, f"{harmadik_sor_szoveg[i]}", 165 + i * 50, 195 + 150, 50, feher, betutipus)
 
     # fehér vonalak kirajzolása
     feher_vonal_y = 160
@@ -100,6 +108,7 @@ while running:
         for y in range(150, 800, 50):
             pygame.draw.rect(screen, feher, (y, feher_vonal_y, 52, 82), 3)
             feher_vonal_uj_sor += 1
+
     # 4. sor
     pygame.draw.rect(screen, feher, (150, 395, 203, 60), 3)
     pygame.draw.rect(screen, feher, (150, 395, 603, 60), 3)
@@ -177,6 +186,7 @@ while running:
     egkep.center = pos
 
     screen.blit(eger, egkep)
+
     pygame.display.update()
     clock.tick(60)
 
