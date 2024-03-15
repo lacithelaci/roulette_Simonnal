@@ -127,21 +127,9 @@ while running:
                 pygame.draw.rect(screen, sarga, (y, feher_vonal_y, 3, 80), 3)
             else:
                 pygame.draw.rect(screen, feher, (y, feher_vonal_y, 3, 80), 3)
-    """
-                for y in range(150, 800, 50):
-                # Vonalhoz tartozó téglalap létrehozása
-                vonal_teglalap = pygame.Rect(y, feher_vonal_y, 52, 82)
-                # Ellenőrzés, hogy az egérmutató rajta van-e a vonalon
-                if vonal_teglalap.collidepoint(mouse_pos):
-                    pygame.draw.rect(screen, sarga, (y, feher_vonal_y, 52, 82), 3)
-                    # Ide írd be a sárgára váltás utáni műveleteket
-                    # Például: print("Az egérmutató a vonalon van!")
-                else:
-                    pygame.draw.rect(screen, feher, (y, feher_vonal_y, 52, 82), 3)"""
     # 4. sor
 
     pygame.draw.rect(screen, feher, (150, 398, 203, 55), 3)
-
     pygame.draw.rect(screen, feher, (150, 398, 603, 55), 3)
     pygame.draw.rect(screen, feher, (150, 398, 403, 55), 3)
 
