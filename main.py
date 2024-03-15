@@ -12,6 +12,7 @@ feher2 = (255, 255, 255)
 sarga = (249, 194, 97)
 sarga2 = (255, 252, 207)
 
+# táblák
 tabla = [["P", "F", "P", "P", "F", "P", "P", "F", "P", "P", "F", "P", "Z"],
          ["F", "P", "F", "F", "P", "F", "F", "P", "F", "F", "P", "F", "Z"],
          ["P", "F", "P", "F", "F", "P", "P", "F", "P", "F", "F", "P", "Z"]]
@@ -20,16 +21,46 @@ elso_sor_szoveg = ["3", "6", "9", "12", "15", "18", "21", "24", "27", "30", "33"
 masodik_sor_szoveg = ["2", "5", "8", "11", "14", "17", "20", "23", "26", "29", "32", "35"]
 harmadik_sor_szoveg = ["1", "4", "7", "10", "13", "16", "19", "22", "25", "28", "31", "34"]
 sorhossz = len(elso_sor_szoveg)
+
 # inicializálás
+
 pygame.init()
 screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Casino Rulette Game")
 angle = 0
+
 # Font objektum létrehozása
 betutipus = pygame.font.Font(None, 30)
 
+# képek
+logo = pygame.image.load("kepek/rlogo.png")
+kerek = pygame.image.load(("kepek/rkerek.png"))
+sargabet = pygame.image.load("kepek/sarga.png").convert_alpha()
+piros_bet = pygame.image.load("kepek/piros.png").convert_alpha()
+zold_bet = pygame.image.load("kepek/zold.png").convert_alpha()
+kek_bet = pygame.image.load("kepek/kek.png").convert_alpha()
+fekete_bet = pygame.image.load("kepek/fekete.png").convert_alpha()
+eger = pygame.image.load("kepek/mousepos.png").convert_alpha()
 
+# betek pozicionálása és érintő pontok
+sargabet_rect = sargabet.get_rect()
+sargabet_rect.center = (374, 545)
+piros_bet_rect = piros_bet.get_rect()
+piros_bet_rect.center = (438, 545)
+zold_bet_rect = zold_bet.get_rect()
+zold_bet_rect.center = (501, 545)
+kek_bet_rect = kek_bet.get_rect()
+kek_bet_rect.center = (563, 545)
+fekete_bet_rect = fekete_bet.get_rect()
+fekete_bet_rect.center = (625, 545)
+
+# egyenleg
+egyenleg = 100000
+tet = 0
+
+# Lista a másolatok tárolására
+zseton_masolat_lista = []
 # game loop
 
 def teglalap_kirajzolasa(screen, szin, x, y, szelesseg, magassag):
@@ -40,25 +71,68 @@ def teglalap_kirajzolasa(screen, szin, x, y, szelesseg, magassag):
 def szoveget_kirajzol(screen, szoveg, szoveg_x, szoveg_y, betumeret=30, szin=feher, betutipus=None, forgatas=False):
     if betutipus is None:
         betutipus = pygame.font.Font(None, betumeret)
+
     megjelenitendo_szoveg = betutipus.render(szoveg, True, szin)
     if forgatas:
+
         megjelenitendo_szoveg = pygame.transform.rotate(megjelenitendo_szoveg, 90)
     screen.blit(megjelenitendo_szoveg, (szoveg_x, szoveg_y))
 
 
 running = True
 while running:
+    #egér pozíció
+    pos = pygame.mouse.get_pos()
+    screen.fill(hatter)
+
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
 
+        if event.type == pygame.KEYDOWN:
+            #q-val ki lehet lépni
+            if event.key == pygame.K_q:
+                running = False
+
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            #sárgabet érintőpont és zsetonok másolása
+            if sargabet_rect.collidepoint(pos):
+                sargabet_masolat = sargabet.copy()
+                sargabet_masolat_rect = sargabet_masolat.get_rect()
+                sargabet_masolat_rect.topleft = event.pos
+                zseton_masolat_lista.append((sargabet_masolat, sargabet_masolat_rect))
+
+            #piros érintőpont és zsetonok másolása
+            elif piros_bet_rect.collidepoint(pos):
+                piros_bet_masolat = piros_bet.copy()
+                piros_bet_masolat_rect = piros_bet_masolat.get_rect()
+                piros_bet_masolat_rect.topleft = event.pos
+                zseton_masolat_lista.append((piros_bet_masolat, piros_bet_masolat_rect))
+
+            #zöld érintőpont és zsetonok másolása
+            elif zold_bet_rect.collidepoint(pos):
+                zold_bet_masolat = zold_bet.copy()
+                zold_bet_masolat_rect = zold_bet_masolat.get_rect()
+                zold_bet_masolat_rect.topleft = event.pos
+                zseton_masolat_lista.append((zold_bet_masolat, zold_bet_masolat_rect))
+
+            #kék érintőpont és zsetonok másolása
+            elif kek_bet_rect.collidepoint(pos):
+                kek_bet_masolat = kek_bet.copy()
+                kek_bet_masolat_rect = kek_bet_masolat.get_rect()
+                kek_bet_masolat_rect.topleft = event.pos
+                zseton_masolat_lista.append((kek_bet_masolat, kek_bet_masolat_rect))
+
+            #fekete érintőpontok és zsetonok másolása
+            elif fekete_bet_rect.collidepoint(pos):
+                fekete_bet_masolat = fekete_bet.copy()
+                fekete_bet_masolat_rect = fekete_bet_masolat.get_rect()
+                fekete_bet_masolat_rect.topleft = event.pos
+                zseton_masolat_lista.append((fekete_bet_masolat, fekete_bet_masolat_rect))
+
         print(event)
 
-    screen.fill(hatter)
-
     # Egyenleg
-    egyenleg = 100000
-    tet = 0
     utolso_nyeremeny = ""
     pygame.draw.rect(screen, sarga, (40, 20, 260, 100), 3)
     szoveget_kirajzol(screen, f"HUF: {egyenleg}", 45, 30, 10, feher, betutipus)
@@ -115,7 +189,6 @@ while running:
             feher_vonal_y += 80
 
         for y in range(150, 800, 50):
-            mouse_pos = pygame.mouse.get_pos()
             # felső vonal
             pygame.draw.line(screen, feher, (y, feher_vonal_y), (y + 50, feher_vonal_y), 3)
             # oldalsó vonal
@@ -123,22 +196,22 @@ while running:
             # alsó vonalak
             pygame.draw.line(screen, feher, (y, feher_vonal_y + 80), (y + 50, feher_vonal_y + 80), 3)
             feher_vonal_uj_sor += 1
-            if oldalso_vonal.collidepoint(mouse_pos):
+            # sárga vagy fehér
+            if oldalso_vonal.collidepoint(pos):
                 pygame.draw.rect(screen, sarga, (y, feher_vonal_y, 3, 80), 3)
             else:
                 pygame.draw.rect(screen, feher, (y, feher_vonal_y, 3, 80), 3)
-    # 4. sor
 
+    # 4. sor
     pygame.draw.rect(screen, feher, (150, 398, 203, 55), 3)
     pygame.draw.rect(screen, feher, (150, 398, 603, 55), 3)
     pygame.draw.rect(screen, feher, (150, 398, 403, 55), 3)
 
-    # tucatok kirajzolása175 420
+    # tucatok kirajzolása
     for i in range(0, 3):
         szoveget_kirajzol(screen, f"{i + 1}. tucat", 200 * i + 200, 410, 10, feher, betutipus)
 
     # 5. sor
-
     pygame.draw.rect(screen, piros, (350, 454, 103, 56))
     pygame.draw.rect(screen, fekete, (455, 454, 96, 53))
     pygame.draw.rect(screen, feher, (150, 450, 603, 60), 3)
@@ -148,6 +221,7 @@ while running:
     pygame.draw.rect(screen, feher, (453, 450, 100, 60), 3)
     pygame.draw.rect(screen, feher, (653, 450, 100, 60), 3)
 
+    #szövegek kirajzolása
     szoveget_kirajzol(screen, f"páratlan", 560, 470, 10, feher, betutipus)
     szoveget_kirajzol(screen, f"magas", 660, 470, 10, feher, betutipus)
     szoveget_kirajzol(screen, f"páros", 270, 470, 10, feher, betutipus)
@@ -162,21 +236,15 @@ while running:
     pygame.draw.ellipse(screen, zold, (114, 245, 30, 72))  # 0
 
     # elozmeny
-
     pygame.draw.rect(screen, feher, (590, 20, 225, 50), 3)
+
     # Kerek
-
-    logo = pygame.image.load("kepek/rlogo.png")
     pygame.display.set_icon(logo)
-    kerek = pygame.image.load(("kepek/rkerek.png"))
     screen.blit(kerek, (375, 15))
-
     x = 440
     y = 80
-
     pygame.draw.circle(screen, feher, (x, y), 45, 2)
     golyocska = pygame.draw.circle(screen, feher2, (53 * math.cos(angle) + x, 53 * math.sin(angle) + y), 3)
-
     angle += 0.03
 
     # kiegeszíto&indito
@@ -190,32 +258,33 @@ while running:
     torles = pygame.draw.rect(screen, sarga2, (255, 524, 87, 42))  # torles
     szoveget_kirajzol(screen, f"törlés", 710, 537, 10, feher, betutipus)
 
-    # zseton
-    sargabet = pygame.image.load("kepek/sarga.png").convert_alpha()
-    screen.blit(sargabet, (364, 524))
+    # Zseton mozgatás
+    for masolt_zsetonok, masolt_zsetonok_rect in zseton_masolat_lista:
+        if pygame.mouse.get_pressed()[0]:
+            if masolt_zsetonok_rect.collidepoint(pygame.mouse.get_pos()):
+                masolt_zsetonok_rect.center = pygame.mouse.get_pos()
+    # másolt zseton kirajzolás
+    for masolt_zsetonok, masolt_zsetonok_rect in zseton_masolat_lista:
+        screen.blit(masolt_zsetonok, masolt_zsetonok_rect)
 
-    piros_bet = pygame.image.load("kepek/piros.png").convert_alpha()
-    screen.blit(piros_bet, (428, 524))
-
-    zold_bet = pygame.image.load("kepek/zold.png").convert_alpha()
-    screen.blit(zold_bet, (491, 524))
-
-    kek_bet = pygame.image.load("kepek/kek.png").convert_alpha()
-    screen.blit(kek_bet, (553, 524))
-
-    fekete_bet = pygame.image.load("kepek/fekete.png").convert_alpha()
-    screen.blit(fekete_bet, (615, 524))
+    # eredeti zsetonok megjelenítése
+    screen.blit(sargabet, sargabet_rect)
+    screen.blit(piros_bet, piros_bet_rect)
+    screen.blit(zold_bet, zold_bet_rect)
+    screen.blit(kek_bet, kek_bet_rect)
+    screen.blit(fekete_bet, fekete_bet_rect)
 
     # eger
-    eger = pygame.image.load("kepek/mousepos.png").convert_alpha()
     egkep = screen.blit(eger, (-100, -10))
     pygame.mouse.set_visible(False)
-    pos = pygame.mouse.get_pos()
     egkep.center = pos
-
     screen.blit(eger, egkep)
 
+    # képfrissítés
     pygame.display.update()
+
+    # Képkocka frissítése
+    pygame.display.flip()
     clock.tick(60)
 
 pygame.quit()
