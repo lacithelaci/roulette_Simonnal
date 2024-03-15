@@ -60,7 +60,7 @@ while running:
     egyenleg = 100000
     tet = 0
     utolso_nyeremeny = ""
-    pygame.draw.rect(screen, feher, (40, 20, 260, 100), 3)
+    pygame.draw.rect(screen, sarga, (40, 20, 260, 100), 3)
     szoveget_kirajzol(screen, f"HUF: {egyenleg}", 45, 30, 10, feher, betutipus)
     szoveget_kirajzol(screen, f"Tét: {tet}", 45, 60, 10, feher, betutipus)
     szoveget_kirajzol(screen, f"Utolsó Nyeremény: {utolso_nyeremeny}", 45, 90, 10, feher, betutipus)
