@@ -110,18 +110,41 @@ while running:
 
     for i in range(0, 3):
         if i == 1:
-            feher_vonal_y += 79
+            feher_vonal_y += 80
         if i == 2:
-            feher_vonal_y += 77
+            feher_vonal_y += 80
 
         for y in range(150, 800, 50):
-            pygame.draw.rect(screen, feher, (y, feher_vonal_y, 52, 82), 3)
+            mouse_pos = pygame.mouse.get_pos()
+            # felső vonal
+            pygame.draw.line(screen, feher, (y, feher_vonal_y), (y + 50, feher_vonal_y), 3)
+            # oldalsó vonal
+            oldalso_vonal = pygame.Rect(y, feher_vonal_y, 3, 80)
+            # alsó vonalak
+            pygame.draw.line(screen, feher, (y, feher_vonal_y + 80), (y + 50, feher_vonal_y + 80), 3)
             feher_vonal_uj_sor += 1
-
+            if oldalso_vonal.collidepoint(mouse_pos):
+                pygame.draw.rect(screen, sarga, (y, feher_vonal_y, 3, 80), 3)
+            else:
+                pygame.draw.rect(screen, feher, (y, feher_vonal_y, 3, 80), 3)
+    """
+                for y in range(150, 800, 50):
+                # Vonalhoz tartozó téglalap létrehozása
+                vonal_teglalap = pygame.Rect(y, feher_vonal_y, 52, 82)
+                # Ellenőrzés, hogy az egérmutató rajta van-e a vonalon
+                if vonal_teglalap.collidepoint(mouse_pos):
+                    pygame.draw.rect(screen, sarga, (y, feher_vonal_y, 52, 82), 3)
+                    # Ide írd be a sárgára váltás utáni műveleteket
+                    # Például: print("Az egérmutató a vonalon van!")
+                else:
+                    pygame.draw.rect(screen, feher, (y, feher_vonal_y, 52, 82), 3)"""
     # 4. sor
-    pygame.draw.rect(screen, feher, (150, 395, 203, 60), 3)
-    pygame.draw.rect(screen, feher, (150, 395, 603, 60), 3)
-    pygame.draw.rect(screen, feher, (150, 395, 403, 60), 3)
+
+    pygame.draw.rect(screen, feher, (150, 398, 203, 55), 3)
+
+    pygame.draw.rect(screen, feher, (150, 398, 603, 55), 3)
+    pygame.draw.rect(screen, feher, (150, 398, 403, 55), 3)
+
     # tucatok kirajzolása175 420
     for i in range(0, 3):
         szoveget_kirajzol(screen, f"{i + 1}. tucat", 200 * i + 200, 410, 10, feher, betutipus)
@@ -143,8 +166,8 @@ while running:
     szoveget_kirajzol(screen, f"alacsony", 155, 470, 10, feher, betutipus)
 
     # oldalsó bizbasz
-    pygame.draw.line(screen, feher, (115, 161), (161, 161), 2)
-    pygame.draw.line(screen, feher, (115, 394), (260, 396), 2)
+    pygame.draw.line(screen, feher, (115, 161), (150, 161), 2)
+    pygame.draw.line(screen, feher, (115, 394), (150, 396), 2)
     pygame.draw.line(screen, feher, (115, 161), (105, 188), 2)
     pygame.draw.line(screen, feher, (115, 394), (105, 367), 2)
     pygame.draw.line(screen, feher, (105, 190), (105, 365), 2)
