@@ -1,3 +1,5 @@
+import random
+
 import pygame
 import math
 
@@ -29,7 +31,7 @@ screen = pygame.display.set_mode((900, 600))
 clock = pygame.time.Clock()
 pygame.display.set_caption("Casino Rulette Game")
 angle = 0
-
+random_szam = ""
 # Font objektum létrehozása
 betutipus = pygame.font.Font(None, 30)
 
@@ -145,6 +147,9 @@ while running:
                 if len(zseton_masolat_lista) > 0:
                     zseton_masolat_lista.pop(-1)
 
+            # start gomb működése
+            elif start.collidepoint(pos):
+                random_szam = random.randint(0, 36)
 
         print(event)
 
@@ -254,6 +259,7 @@ while running:
 
     # elozmeny
     pygame.draw.rect(screen, feher, (590, 20, 225, 50), 3)
+    szoveget_kirajzol(screen, f"Sorsolt szám: {random_szam}", 600, 35, 10, feher, betutipus)
 
     # Kerek
     pygame.display.set_icon(logo)
