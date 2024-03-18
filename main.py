@@ -63,12 +63,17 @@ tet = 0
 
 # Lista a másolatok tárolására
 zseton_masolat_lista = list()
-
+osszegek = list()
+ismetelt_osszegek = []
+ismetelt_zseton_lista = []
 # gombok
 torles = pygame.Rect(255, 524, 87, 42)
 vissza = pygame.Rect(154, 524, 86, 42)
 start = pygame.Rect(682, 524, 113, 42)
 ismetles = pygame.Rect(42, 524, 95, 42)
+# 5. sor tárolása
+piros1 = pygame.Rect(350, 454, 103, 56)
+fekete1 = pygame.Rect(455, 454, 96, 53)
 
 
 # game loop
@@ -109,6 +114,8 @@ while running:
                 sargabet_masolat_rect = sargabet_masolat.get_rect()
                 sargabet_masolat_rect.topleft = event.pos
                 zseton_masolat_lista.append((sargabet_masolat, sargabet_masolat_rect))
+                osszegek.append(5)
+                egyenleg -= 5
 
             # piros érintőpont és zsetonok másolása
             elif piros_bet_rect.collidepoint(pos):
@@ -116,6 +123,8 @@ while running:
                 piros_bet_masolat_rect = piros_bet_masolat.get_rect()
                 piros_bet_masolat_rect.topleft = event.pos
                 zseton_masolat_lista.append((piros_bet_masolat, piros_bet_masolat_rect))
+                osszegek.append(10)
+                egyenleg -= 10
 
             # zöld érintőpont és zsetonok másolása
             elif zold_bet_rect.collidepoint(pos):
@@ -123,13 +132,16 @@ while running:
                 zold_bet_masolat_rect = zold_bet_masolat.get_rect()
                 zold_bet_masolat_rect.topleft = event.pos
                 zseton_masolat_lista.append((zold_bet_masolat, zold_bet_masolat_rect))
-
+                osszegek.append(20)
+                egyenleg -= 20
             # kék érintőpont és zsetonok másolása
             elif kek_bet_rect.collidepoint(pos):
                 kek_bet_masolat = kek_bet.copy()
                 kek_bet_masolat_rect = kek_bet_masolat.get_rect()
                 kek_bet_masolat_rect.topleft = event.pos
                 zseton_masolat_lista.append((kek_bet_masolat, kek_bet_masolat_rect))
+                osszegek.append(50)
+                egyenleg -= 50
 
             # fekete érintőpontok és zsetonok másolása
             elif fekete_bet_rect.collidepoint(pos):
@@ -137,19 +149,36 @@ while running:
                 fekete_bet_masolat_rect = fekete_bet_masolat.get_rect()
                 fekete_bet_masolat_rect.topleft = event.pos
                 zseton_masolat_lista.append((fekete_bet_masolat, fekete_bet_masolat_rect))
+                osszegek.append(100)
+                egyenleg -= 100
 
             # törlés gomb működése
             elif torles.collidepoint(pos):
+                ismetelt_osszegek = osszegek
+                ismetelt_zseton_lista = zseton_masolat_lista
                 zseton_masolat_lista = []
+                egyenleg += sum(osszegek)
+                osszegek = []
+
 
             # vissza gomb működése
             elif vissza.collidepoint(pos):
                 if len(zseton_masolat_lista) > 0:
                     zseton_masolat_lista.pop(-1)
+                    egyenleg += osszegek[-1]
+                    osszegek.pop(-1)
+
+            elif ismetles.collidepoint(pos):
+                if sum(ismetelt_osszegek) != 0:
+                    osszegek = ismetelt_osszegek
+                    zseton_masolat_lista = ismetelt_zseton_lista
+
 
             # start gomb működése
             elif start.collidepoint(pos):
                 random_szam = random.randint(0, 36)
+                zseton_masolat_lista = []
+                osszegek = []
 
         print(event)
 
@@ -234,8 +263,8 @@ while running:
         szoveget_kirajzol(screen, f"{i + 1}. tucat", 200 * i + 200, 420, 10, feher, betutipus)
 
     # 5. sor
-    pygame.draw.rect(screen, piros, (350, 454, 103, 56))
-    pygame.draw.rect(screen, fekete, (455, 454, 96, 53))
+    pygame.draw.rect(screen, piros, piros1)
+    pygame.draw.rect(screen, fekete, fekete1)
     pygame.draw.rect(screen, feher, (150, 450, 603, 60), 3)
     pygame.draw.rect(screen, feher, (150, 450, 203, 60), 3)
     pygame.draw.rect(screen, feher, (150, 450, 403, 60), 3)
